@@ -18,7 +18,7 @@ export default function Character({ char }) {
             ...char.shortFilms,
             ...char.videoGames
           ].map((movie) => (
-            <div>{movie}</div>
+            <div key={movie}>{movie}</div>
           ))}
         </div>
       </div>
