@@ -5,10 +5,12 @@
   margin-bottom: 10px;
   background-color: #eee;
 }
+
 .character-image {
   width: 200px;
   background-color: #ddd;
 }
+
 .character-image img {
   object-fit: contain;
   width: 100%;
@@ -27,4 +29,13 @@
   max-height: 100px;
   overflow: auto;
   align-items: flex-start;
+  font-size: 0.9rem;
+}
+
+.filter {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
 }

@@ -3,19 +3,35 @@ import Character from "./character";
 import Filter from "./filter";
 import "./characters.css";
 
+function readDisneyCharacters(url) {
+  return fetch(url)
+    .then((response) => {
+      return response.json();
+    })
+}
+
 export default function Characters() {
   const [list, setList] = useState([]);
   const [characterList, setCharacters] = useState([])
+  const [nextPageUrl, setNextPageUrl] = useState('')
+
+  const updateData = useCallback(data => {
+    setCharacters(data.data)
+    setList(data.data);
+    setNextPageUrl(data.nextPage)
+  }, [setCharacters, setList, setNextPageUrl])
 
   useEffect(() => {
-    fetch("https://api.disneyapi.dev/characters")
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        setCharacters(data.data)
-        setList(data.data);
-      });
+    // load first page 
+    readDisneyCharacters("https://api.disneyapi.dev/characters")
+      .then(updateData);
+    window.addEventListener('scroll', () => {
+      // End of the document reached?
+      if (window.innerHeight + document.documentElement.scrollTop === document.documentElement.offsetHeight) {
+        console.log('Reached to the buttom of thje page!')
+        readDisneyCharacters(nextPageUrl).then(updateData)
+      }
+    })
   }, []);
 
   const reset = useCallback(() => {

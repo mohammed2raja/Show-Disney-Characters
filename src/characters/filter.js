@@ -10,7 +10,7 @@ export default function Filter({ list, setList, reset }) {
 
   return (
     <div className="filter">
-      <input type="text" value={str} onChange={e => setStr(e?.target?.value)} />
+      <input type="text" value={str} onChange={e => setStr(e.target?.value)} onKeyUp={e => { if (e.key === 'Enter') search() }} />
       <button onClick={search}>Search</button>
       <button onClick={() => { setStr(''); reset() }}>Reset</button>
     </div>
