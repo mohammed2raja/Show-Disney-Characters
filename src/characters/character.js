@@ -2,7 +2,7 @@ import "./characters.css";
 
 export default function Character({ char }) {
   return (
-    <div className="character">
+    <li className="character">
       <div className="character-image">
         <img src={char.imageUrl} alt="character" />
       </div>
@@ -22,6 +22,6 @@ export default function Character({ char }) {
           ))}
         </div>
       </div>
-    </div>
+    </li>
   );
 }

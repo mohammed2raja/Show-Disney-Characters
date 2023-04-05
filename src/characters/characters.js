@@ -16,23 +16,31 @@ export default function Characters() {
   const [nextPageUrl, setNextPageUrl] = useState('')
 
   const updateData = useCallback(data => {
-    setCharacters(data.data)
-    setList(data.data);
+    setCharacters(characterList.concat(data.data))
+    setList(list.concat(data.data));
     setNextPageUrl(data.nextPage)
   }, [setCharacters, setList, setNextPageUrl])
+
+  const infiniteScroll = useCallback(() => {
+    // End of the document reached?
+    if (window.innerHeight + document.documentElement.scrollTop === document.documentElement.offsetHeight) {
+      console.log('Reached to the buttom of thje page!', nextPageUrl)
+      readDisneyCharacters(nextPageUrl).then(updateData)
+    }
+  }, [nextPageUrl])
 
   useEffect(() => {
     // load first page 
     readDisneyCharacters("https://api.disneyapi.dev/characters")
       .then(updateData);
-    window.addEventListener('scroll', () => {
-      // End of the document reached?
-      if (window.innerHeight + document.documentElement.scrollTop === document.documentElement.offsetHeight) {
-        console.log('Reached to the buttom of thje page!')
-        readDisneyCharacters(nextPageUrl).then(updateData)
-      }
-    })
   }, []);
+
+  useEffect(() => {
+    window.addEventListener('scroll', infiniteScroll)
+    return () => {
+      window.removeEventListener('scroll', infiniteScroll)
+    }
+  }, [nextPageUrl])
 
   const reset = useCallback(() => {
     setList(characterList)
@@ -41,9 +49,11 @@ export default function Characters() {
   return (
     <div>
       <Filter list={characterList} setList={setList} reset={reset} />
-      {list.map((ch) => (
-        <Character key={ch._id} char={ch} />
-      ))}
+      <ul className="rounded-list">
+        {list.map((ch) => (
+          <Character key={ch.name} char={ch} />
+        ))}
+      </ul>
       {!list?.length && <div>No Resuilt found!</div>}
     </div>
   );
